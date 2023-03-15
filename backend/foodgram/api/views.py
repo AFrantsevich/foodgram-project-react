@@ -16,10 +16,11 @@ from .serializers import (TagsSerializer, RecipeCreateSerializer,
                           IngredientSerializer, FavoriteSerializer,
                           CartSerializer)
 from foodgram.models import (Tags, Recipe,
-                        Subscribe, User,
-                        Ingredient, Favorite, Cart)
+                             Subscribe, Ingredient,
+                             Favorite, Cart)
 from .permission import IsAuthenticatedOrReadOnlyIsAuthorOrAdmin
 from .resources import CartResource
+from users.models import User
 
 
 class TagsViewSet(viewsets.ModelViewSet):
@@ -107,7 +108,7 @@ class IngredientsViewSet(viewsets.ModelViewSet):
         return Ingredient.objects.all()
 
 
-class FavoriteAndCartViewSet(viewsets.ModelViewSet):
+class FavoriteAndCartMixin(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     pagination_class = None
     permission_classes = (IsAuthenticated | IsAdminUser, )
@@ -131,7 +132,7 @@ class FavoriteAndCartViewSet(viewsets.ModelViewSet):
                             Recipe, pk=self.kwargs.get("id")))
 
 
-class FavoriteViewSet(FavoriteAndCartViewSet):
+class FavoriteViewSet(FavoriteAndCartMixin):
     queryset = Favorite.objects.all()
     serializer_class = FavoriteSerializer
 
@@ -143,7 +144,7 @@ class FavoriteViewSet(FavoriteAndCartViewSet):
         return self.create_obj(Favorite, serializer)
 
 
-class CartViewSet(FavoriteAndCartViewSet):
+class CartViewSet(FavoriteAndCartMixin):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
 

@@ -7,7 +7,7 @@ from import_export import resources
 from import_export.fields import Field
 
 
-from .models import Cart, RecipeTable
+from foodgram.models import Cart, RecipeTable
 from .scripts import delete_dub
 
 

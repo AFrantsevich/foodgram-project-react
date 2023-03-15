@@ -1,9 +1,9 @@
 from rest_framework import routers
 
 
-from foodgram.views import (TagsViewSet, RecipeViewSet,
-                            SubscriptionsViewSet, IngredientsViewSet,
-                            FavoriteViewSet, CartViewSet)
+from api.views import (TagsViewSet, RecipeViewSet,
+                       SubscriptionsViewSet, IngredientsViewSet,
+                       FavoriteViewSet, CartViewSet)
 
 
 v1_router = routers.DefaultRouter()

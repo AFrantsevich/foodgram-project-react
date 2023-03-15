@@ -3,7 +3,7 @@ from django.urls import path, include
 from api.urls import v1_router
 
 
-from foodgram.views import DownlodShoppingCart
+from api.views import DownlodShoppingCart
 
 
 urlpatterns = [
