@@ -74,7 +74,7 @@ class Recipe(models.Model):
                                          related_name='recipes',
                                          through='RecipeTable',)
     image = models.ImageField(verbose_name='image',
-                              upload_to='static/image/')
+                              upload_to='media/static/image/')
     author = models.ForeignKey(get_user_model(),
                                verbose_name='author',
                                on_delete=models.CASCADE,

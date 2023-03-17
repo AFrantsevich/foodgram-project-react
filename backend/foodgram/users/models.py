@@ -63,4 +63,3 @@ class User(AbstractUser):
 
     class Meta:
         ordering = ('id',)
-

@@ -5,3 +5,4 @@ djangorestframework_simplejwt==4.8.0
 Pillow==9.4.0
 django-import-export==3.1.0
 django-filter==22.1
+gunicorn
