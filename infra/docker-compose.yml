@@ -1,20 +1,20 @@
 version: '3.3'
 services:
   backend:
-#    build:
-#      context: ../backend
-#      dockerfile: ../backend/Dockerfile
-    image: frantsevich/bakend:latest
-    restart: always
+    build:
+      context: ../backend
+      dockerfile: ../backend/Dockerfile
+#    image: frantsevich/bakend:latest
+#    restart: always
     volumes:
       - media_value:/app/media/
       - static_value:/app/static/
   frontend:
-#    build:
-#      context: ../frontend
-#      dockerfile: Dockerfile
-    image: frantsevich/frontend:latest
-    restart: always
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+#    image: frantsevich/frontend:latest
+#    restart: always
     volumes:
       - ../frontend/:/app/result_build/
   nginx:
