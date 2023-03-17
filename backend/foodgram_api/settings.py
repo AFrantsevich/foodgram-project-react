@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'djoser',
     'users',
     'api',
-    'foodgram_api',
     'import_export',
     'foodgram',
 ]
