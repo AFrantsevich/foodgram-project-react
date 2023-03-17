@@ -3,7 +3,7 @@ services:
   backend:
     build:
       context: ../backend
-      dockerfile: ../backend/foodgram/Dockerfile
+      dockerfile: ../backend/Dockerfile
     volumes:
       - media_value:/app/media/
       - static_value:/app/static/

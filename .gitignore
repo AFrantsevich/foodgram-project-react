@@ -132,3 +132,5 @@ dmypy.json
 .idea
 /backend/foodgram/static/
 /backend/foodgram/templates/
+/backend/media/
+/backend/static/
