@@ -1,5 +1,14 @@
 version: '3.3'
 services:
+  db:
+    # образ, из которого должен быть запущен контейнер
+    image: postgres:13.0-alpine
+    # volume и связанная с ним директория в контейнере
+    volumes:
+      - database:/var/lib/postgresql/data/
+    # адрес файла, где хранятся переменные окружения
+    env_file:
+      - ../backend/foodgram_api/.env
   backend:
 #    build:
 #      context: ../backend
@@ -9,6 +18,8 @@ services:
     volumes:
       - media_value:/app/media/
       - static_value:/app/static/
+    depends_on:
+      - db
   frontend:
 #    build:
 #      context: ../frontend
@@ -30,5 +41,6 @@ services:
     depends_on:
       - backend
 volumes:
+  database:
   static_value:
   media_value:
