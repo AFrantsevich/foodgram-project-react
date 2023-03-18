@@ -8,7 +8,7 @@ services:
       - database:/var/lib/postgresql/data/
     # адрес файла, где хранятся переменные окружения
     env_file:
-      - ../backend/foodgram_api/.env
+      - ./.env
   backend:
 #    build:
 #      context: ../backend
