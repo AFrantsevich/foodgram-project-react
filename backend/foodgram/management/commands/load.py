@@ -9,4 +9,5 @@ class Command(BaseCommand):
             data = json.load(f)
             for i in data:
                 Ingredient.objects.create(
-                    name=i.get('name'), measurement_unit=i.get('measurement_unit'))
+                    name=i.get('name'),
+                    measurement_unit=i.get('measurement_unit'))
