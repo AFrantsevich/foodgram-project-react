@@ -73,8 +73,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
 class SubscriptionsViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
-    queryset = Subscribe.objects.all()
     serializer_class = SubscribeSerializer
+
+    def get_queryset(self):
+        if self.request.GET.get('search'):
+            return Subscribe.objects.filter(user=self.request.user).filter(
+                name__iregex=self.request.GET.get('search'))
+        return Subscribe.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
         if self.request.user.id == int(self.kwargs.get("id")):
