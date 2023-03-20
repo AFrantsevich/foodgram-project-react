@@ -100,7 +100,8 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
     def get_is_in_shopping_cart(self, obj):
         if self.context['request'].user.is_anonymous:
             return False
-        return True if (Cart.objects.filter(recipe=obj)) else False
+        return True if (Cart.objects.filter(recipe=obj).filter(
+            user=self.context['request'].user)) else False
 
     def create(self, validated_data):
         ingredients = validated_data.pop('recipetable_set')

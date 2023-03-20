@@ -56,18 +56,18 @@ class RecipeViewSet(viewsets.ModelViewSet):
         elif is_favorited == '0':
             queryset = Recipe.objects.exclude(
                 favorites__user=self.request.user)
-        elif is_in_shopping_cart:
+        elif is_in_shopping_cart == '1':
             queryset = Recipe.objects.filter(
-                carts__user=self.request.user).distinct()
-        # elif is_in_shopping_cart == '0':
-        #     queryset = Recipe.objects.exclude(
-        #         carts__user=self.request.user)
+                carts__user=self.request.user)
+        elif is_in_shopping_cart == '0':
+            queryset = Recipe.objects.exclude(
+                carts__user=self.request.user)
         elif author:
             queryset = Recipe.objects.filter(
                 author_id=author)
         elif tags:
             queryset = Recipe.objects.filter(
-                tags__slug__iregex=tags).distinct()
+                tags__slug__iregex=tags)
         return queryset
 
 
