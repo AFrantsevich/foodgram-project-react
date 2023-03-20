@@ -67,17 +67,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 author_id=author)
         elif tags:
             queryset = Recipe.objects.filter(
-                tags__slug__iregex=tags)
+                tags__slug__iregex=tags).distinct()
         return queryset
-
-    def delete(self, model, *args, **kwargs):
-        obj = Recipe.objects.filter(author=self.request.user).filter(
-                id=self.kwargs.get("id"))
-        if obj.exists():
-            obj.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        raise serializers.ValidationError(
-            {"error": "Объекта удаления не существует"})
 
 
 class SubscriptionsViewSet(viewsets.ModelViewSet):

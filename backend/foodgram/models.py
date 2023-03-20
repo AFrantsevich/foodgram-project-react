@@ -87,7 +87,7 @@ class Recipe(models.Model):
         verbose_name='cooking_time')
 
     def __str__(self):
-        return self.name
+        return 'Рецепты'
 
     class Meta:
         constraints = [
