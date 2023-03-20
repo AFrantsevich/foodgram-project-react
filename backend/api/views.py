@@ -133,8 +133,12 @@ class FavoriteAndCartMixin(viewsets.ModelViewSet):
 
 
 class FavoriteViewSet(FavoriteAndCartMixin):
-    queryset = Favorite.objects.all()
     serializer_class = FavoriteSerializer
+
+    def get_queryset(self):
+        new_queryset = Favorite.objects.filter(
+            user=self.request.user)
+        return new_queryset
 
     @action(methods=['delete'], detail=False,)
     def delete(self, *args, **kwargs):
@@ -145,8 +149,12 @@ class FavoriteViewSet(FavoriteAndCartMixin):
 
 
 class CartViewSet(FavoriteAndCartMixin):
-    queryset = Cart.objects.all()
     serializer_class = CartSerializer
+
+    def get_queryset(self):
+        new_queryset = Cart.objects.filter(
+            user=self.request.user)
+        return new_queryset
 
     @action(methods=['delete'], detail=False,)
     def delete(self, *args, **kwargs):
