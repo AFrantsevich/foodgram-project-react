@@ -7,9 +7,6 @@ services:
     env_file:
       - ./.env
   backend:
-#    build:
-#      context: ../backend
-#      dockerfile: ../backend/Dockerfile
     image: frantsevich/bakend:latest
     restart: always
     volumes:
@@ -18,9 +15,6 @@ services:
     depends_on:
       - db
   frontend:
-#    build:
-#      context: ../frontend
-#      dockerfile: Dockerfile
     image: frantsevich/frontend:latest
     restart: always
     volumes:
