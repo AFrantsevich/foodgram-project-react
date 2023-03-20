@@ -45,7 +45,7 @@ class RecipeTable(models.Model):
                                  decimal_places=2)
 
     def __str__(self):
-        return self.recipe
+        return 'RecipeTable'
 
 
 class Ingredient(models.Model):
