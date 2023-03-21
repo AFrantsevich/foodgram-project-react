@@ -3,6 +3,5 @@ WORKDIR /app
 COPY ./frontend/package*.json ./
 RUN npm install
 COPY ./frontend/ ./
-COPY ./docs/ ./
 RUN npm run build
 CMD cp -r build result_build
