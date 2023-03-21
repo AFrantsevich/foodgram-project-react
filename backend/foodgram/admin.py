@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Ingredient, Recipe, Favorite, Tags
 from users.models import User
+from django.contrib.auth.admin import UserAdmin
 
 
 class RecipeAdmin(admin.ModelAdmin):
@@ -9,11 +10,6 @@ class RecipeAdmin(admin.ModelAdmin):
 
     def Favorite_count(self, obj):
         return Favorite.objects.filter(recipe=obj).count()
-
-
-class UserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email')
-    list_filter = ('username', 'email')
 
 
 class IngredientAdmin(admin.ModelAdmin):
