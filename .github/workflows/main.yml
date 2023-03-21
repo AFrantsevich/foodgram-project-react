@@ -59,8 +59,8 @@ jobs:
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
             sudo docker-compose stop
-            sudo docker-compose rm backend
-            sudo docker-compose rm frontend
+            sudo docker-compose rm bakend:latest
+            sudo docker-compose rm frontend:latest
             sudo docker pull frantsevich/bakend:latest
             sudo docker pull frantsevich/frontend:latest
             touch .env
