@@ -44,7 +44,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = Recipe.objects.all()
         if self.request.user.is_anonymous:
-            return queryset
+            is_favorited, is_in_shopping_cart = False, False
         is_favorited = self.request.query_params.get("is_favorited")
         is_in_shopping_cart = self.request.query_params.get(
             "is_in_shopping_cart")
