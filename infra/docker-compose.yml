@@ -7,7 +7,7 @@ services:
     env_file:
       - ./.env
   backend:
-    image: frantsevich/bakend:latest
+    image: frantsevich/backend:latest
     restart: always
     volumes:
       - media_value:/app/media/
