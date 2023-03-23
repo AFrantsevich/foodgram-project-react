@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'api',
     'import_export',
     'foodgram',
+    'foodgram_api',
 ]
 
 MIDDLEWARE = [

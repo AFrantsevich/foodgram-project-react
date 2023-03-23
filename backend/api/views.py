@@ -71,33 +71,82 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-class SubscriptionsViewSet(viewsets.ModelViewSet):
+class FavoriteCartSubscriptionMixin(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
+    pagination_class = None
+    permission_classes = (IsAuthenticated | IsAdminUser, )
+
+    def get_query(self, model):
+        return model.objects.filter(
+            user=self.request.user)
+
+    def delete_obj(self, model, model2, field, field2, *args, **kwargs):
+        obj_mod = get_object_or_404(model2, pk=self.kwargs.get("id"))
+        obj = model.objects.filter(**{field: self.request.user, field2: obj_mod})
+        if obj.exists():
+            obj.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        raise serializers.ValidationError(
+            {"error": "Объекта удаления не существует"})
+
+    def create_obj(self, model, model2, serializer, field, field2, ):
+        obj_mod = get_object_or_404(model2, pk=self.kwargs.get("id"))
+        if model.objects.filter(**{field: self.request.user,
+                                   field2: obj_mod}).exists():
+            raise serializers.ValidationError(
+                {"error": "Этот объект уже существует в БД."})
+        serializer.save(**{field: self.request.user, field2: obj_mod})
+
+
+class SubscriptionsViewSet(FavoriteCartSubscriptionMixin):
     permission_classes = (IsAuthenticated,)
     serializer_class = SubscribeSerializer
 
     def get_queryset(self):
-        if self.request.GET.get('search'):
-            return Subscribe.objects.filter(user=self.request.user).filter(
-                name__iregex=self.request.GET.get('search'))
-        return Subscribe.objects.filter(user=self.request.user)
+        return self.get_query(Subscribe)
 
     def perform_create(self, serializer):
         if self.request.user.id == int(self.kwargs.get("id")):
             raise serializers.ValidationError(
                 {"error": "Нельзя подписаться на самого себя"})
-        serializer.save(user=self.request.user,
-                        author=get_object_or_404(
-                            User, pk=self.kwargs.get("id")))
+        return self.create_obj(Subscribe, User, serializer,
+                               field='user', field2='author')
 
     @action(methods=['delete'], detail=False,)
     def delete(self, *args, **kwargs):
-        obj = Subscribe.objects.filter(user=self.request.user).filter(
-            author_id=self.kwargs.get("id"))
-        if obj:
-            obj.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        raise serializers.ValidationError(
-            {"error": "Подписки не существует"})
+        return self.delete_obj(Subscribe, User,
+                               field='user', field2='author')
+
+class FavoriteViewSet(FavoriteCartSubscriptionMixin):
+    serializer_class = FavoriteSerializer
+
+    def get_queryset(self):
+        return self.get_query(Favorite)
+
+    @action(methods=['delete'], detail=False,)
+    def delete(self, *args, **kwargs):
+        return self.delete_obj(Favorite, Recipe, field='user',
+                               field2='recipe')
+
+    def perform_create(self, serializer):
+        return self.create_obj(Favorite, Recipe, serializer,
+                               field='user', field2='recipe', )
+
+
+class CartViewSet(FavoriteCartSubscriptionMixin):
+    serializer_class = CartSerializer
+
+    def get_queryset(self):
+        return self.get_query(Cart)
+
+    @action(methods=['delete'], detail=False,)
+    def delete(self, *args, **kwargs):
+        return self.delete_obj(Cart, Recipe,
+                               field='user', field2='recipe',)
+
+    def perform_create(self, serializer):
+        return self.create_obj(Cart, Recipe, serializer,
+                               field='user', field2='recipe',)
 
 
 class IngredientsViewSet(viewsets.ModelViewSet):
@@ -107,66 +156,10 @@ class IngredientsViewSet(viewsets.ModelViewSet):
     http_method_names = ['get']
 
     def get_queryset(self):
-        if self.request.GET.get('search'):
+        if self.request.GET.get('name'):
             return Ingredient.objects.filter(
-                name__iregex=self.request.GET.get('search'))
+                name__iregex=self.request.GET.get('name'))
         return Ingredient.objects.all()
-
-
-class FavoriteAndCartMixin(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated,)
-    pagination_class = None
-    permission_classes = (IsAuthenticated | IsAdminUser, )
-
-    def delete_obj(self, model, *args, **kwargs):
-        obj = model.objects.filter(user=self.request.user).filter(
-                recipe_id=self.kwargs.get("id"))
-        if obj.exists():
-            obj.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        raise serializers.ValidationError(
-            {"error": "Объекта удаления не существует"})
-
-    def create_obj(self, model, serializer):
-        if model.objects.filter(user=self.request.user).filter(
-                recipe_id=self.kwargs.get("id")).exists():
-            raise serializers.ValidationError(
-                {"error": "Этот объект удже существуют в БД."})
-        serializer.save(user=self.request.user,
-                        recipe=get_object_or_404(
-                            Recipe, pk=self.kwargs.get("id")))
-
-
-class FavoriteViewSet(FavoriteAndCartMixin):
-    serializer_class = FavoriteSerializer
-
-    def get_queryset(self):
-        new_queryset = Favorite.objects.filter(
-            user=self.request.user)
-        return new_queryset
-
-    @action(methods=['delete'], detail=False,)
-    def delete(self, *args, **kwargs):
-        return self.delete_obj(Favorite)
-
-    def perform_create(self, serializer):
-        return self.create_obj(Favorite, serializer)
-
-
-class CartViewSet(FavoriteAndCartMixin):
-    serializer_class = CartSerializer
-
-    def get_queryset(self):
-        new_queryset = Cart.objects.filter(
-            user=self.request.user)
-        return new_queryset
-
-    @action(methods=['delete'], detail=False,)
-    def delete(self, *args, **kwargs):
-        return self.delete_obj(Cart)
-
-    def perform_create(self, serializer):
-        return self.create_obj(Cart, serializer)
 
 
 class DownlodShoppingCart(generics.ListCreateAPIView):
