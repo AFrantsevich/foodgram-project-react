@@ -82,7 +82,8 @@ class FavoriteCartSubscriptionMixin(viewsets.ModelViewSet):
 
     def delete_obj(self, model, model2, field, field2, *args, **kwargs):
         obj_mod = get_object_or_404(model2, pk=self.kwargs.get("id"))
-        obj = model.objects.filter(**{field: self.request.user, field2: obj_mod})
+        obj = model.objects.filter(**{field: self.request.user,
+                                      field2: obj_mod})
         if obj.exists():
             obj.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
@@ -116,6 +117,7 @@ class SubscriptionsViewSet(FavoriteCartSubscriptionMixin):
     def delete(self, *args, **kwargs):
         return self.delete_obj(Subscribe, User,
                                field='user', field2='author')
+
 
 class FavoriteViewSet(FavoriteCartSubscriptionMixin):
     serializer_class = FavoriteSerializer
