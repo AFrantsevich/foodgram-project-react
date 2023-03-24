@@ -72,9 +72,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
 
 class FavoriteCartSubscriptionMixin(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated,)
-    pagination_class = None
-    permission_classes = (IsAuthenticated | IsAdminUser, )
+    permission_classes = (IsAuthenticated | IsAdminUser,)
 
     def get_query(self, model):
         return model.objects.filter(
@@ -100,7 +98,6 @@ class FavoriteCartSubscriptionMixin(viewsets.ModelViewSet):
 
 
 class SubscriptionsViewSet(FavoriteCartSubscriptionMixin):
-    permission_classes = (IsAuthenticated,)
     serializer_class = SubscribeSerializer
 
     def get_queryset(self):
@@ -120,6 +117,7 @@ class SubscriptionsViewSet(FavoriteCartSubscriptionMixin):
 
 
 class FavoriteViewSet(FavoriteCartSubscriptionMixin):
+    pagination_class = None
     serializer_class = FavoriteSerializer
 
     def get_queryset(self):
@@ -136,6 +134,7 @@ class FavoriteViewSet(FavoriteCartSubscriptionMixin):
 
 
 class CartViewSet(FavoriteCartSubscriptionMixin):
+    pagination_class = None
     serializer_class = CartSerializer
 
     def get_queryset(self):

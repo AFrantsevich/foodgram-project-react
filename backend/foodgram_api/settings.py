@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 
-DEBUG = True
+DEBUG = False
 
 
 APPEND_SLASH = False
@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'api',
     'import_export',
     'foodgram',
-    'foodgram_api',
 ]
 
 MIDDLEWARE = [
